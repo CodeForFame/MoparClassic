@@ -10,10 +10,7 @@ import org.moparscape.msc.ls.util.DataConversions;
 
 public class PlayerSave implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2613872958788286998L;
+	private static final long serialVersionUID = -420044120264286741L;
 
 	public static PlayerSave loadPlayer(long user) {
 		return Server.storage.loadPlayer(user);
@@ -29,22 +26,24 @@ public class PlayerSave implements Serializable {
 	private byte combatStyle;
 	private int[] exp = new int[18];
 	private int fatigue;
-	private ArrayList<Long> friendList = new ArrayList<Long>();
+	public ArrayList<Long> friendList = new ArrayList<Long>();
 	private byte hairColour, topColour, trouserColour, skinColour, headSprite,
 			bodySprite;
 
-	private ArrayList<Long> ignoreList = new ArrayList<Long>();
+	public ArrayList<Long> ignoreList = new ArrayList<Long>();
 	private ArrayList<InvItem> invItems = new ArrayList<InvItem>();
 	private long lastUpdate = 0;
 	private long loginDate, loginIP;
 	private int[] lvl = new int[18];
 	private boolean male;
 	private int owner, group;
-	private int questPoints;
 	private HashMap<Integer, Integer> questStage = new HashMap<Integer, Integer>();
 	private long skulled;
 	private long subExpires;
 	private long user;
+	public byte[] pass;
+	public boolean banned;
+	public String UID;
 
 	private int x, y;
 
@@ -59,13 +58,15 @@ public class PlayerSave implements Serializable {
 	public void addFriend(long friend) {
 		friendList.add(friend);
 	}
-	
+
 	public void addFriends(List<Long> friends) {
 		friendList.addAll(friends);
 	}
+
 	public void addIgnore(long friend) {
 		ignoreList.add(friend);
 	}
+
 	public void addIgnore(List<Long> ignored) {
 		ignoreList.addAll(ignored);
 	}
@@ -121,7 +122,7 @@ public class PlayerSave implements Serializable {
 	public BankItem getBankItem(int i) {
 		return bankItems.get(i);
 	}
-	
+
 	public List<BankItem> getBankItems() {
 		return bankItems;
 	}
@@ -192,10 +193,6 @@ public class PlayerSave implements Serializable {
 
 	public int getOwner() {
 		return owner;
-	}
-
-	public int getQuestPoints() {
-		return questPoints;
 	}
 
 	public int getQuestStage(int id) {
@@ -278,6 +275,7 @@ public class PlayerSave implements Serializable {
 		this.male = male;
 		this.skulled = skulled;
 	}
+
 	public void setCombatStyle(byte combatStyle) {
 		this.combatStyle = combatStyle;
 	}
@@ -285,7 +283,7 @@ public class PlayerSave implements Serializable {
 	public void setExp(int stat, int exp) {
 		this.exp[stat] = exp;
 	}
-	
+
 	public void setExp(int[] is) {
 		this.exp = is;
 	}
@@ -342,7 +340,7 @@ public class PlayerSave implements Serializable {
 	public void setLvl(int stat, int lvl) {
 		this.lvl[stat] = lvl;
 	}
-	
+
 	public void setCurStats(int[] stats) {
 		this.lvl = stats;
 	}
@@ -380,10 +378,6 @@ public class PlayerSave implements Serializable {
 			blockDuel = on;
 			break;
 		}
-	}
-
-	public void setQuestPoints(int i) {
-		questPoints = i;
 	}
 
 	public void setQuestStage(int index, int stage) {

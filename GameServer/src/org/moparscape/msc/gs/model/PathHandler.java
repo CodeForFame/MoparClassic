@@ -1,6 +1,8 @@
 package org.moparscape.msc.gs.model;
 
 import org.moparscape.msc.gs.Instance;
+import org.moparscape.msc.gs.model.landscape.ActiveTile;
+import org.moparscape.msc.gs.model.landscape.TileValue;
 
 public class PathHandler {
 	/**
@@ -152,7 +154,7 @@ public class PathHandler {
 	}
 
 	private boolean isBlocking(byte val, byte bit) {
-		if (path.isNoClip())
+		if (path != null && path.isNoClip())
 			return false;
 
 		if ((val & bit) != 0) { // There is a wall in the way
@@ -170,8 +172,8 @@ public class PathHandler {
 		return false;
 	}
 
-	private boolean isBlocking(int x, int y, int bit) {
-		if (path.isNoClip())
+	public boolean isBlocking(int x, int y, int bit) {
+		if (path != null && path.isNoClip())
 			return false;
 		if (mob instanceof Player) {
 			Player p = (Player) mob;
@@ -184,25 +186,26 @@ public class PathHandler {
 	}
 
 	private boolean isMobBlocking(int x, int y) {
-		// ActiveTile t = world.getTile(x, y);
-		// if (mob instanceof Player) {
-		// if (t.hasNpcs()) {
-		// for (Npc n : t.getNpcs()) {
-		// if (n.getDef().isAggressive() && !n.getLocation().inWilderness())
-		// return true;
-		// }
-		// }
-		// }
-		// if (mob instanceof Npc) {
-		// Npc n = (Npc) mob;
-		// if (n.getChasing() != null)
-		// if (t.hasPlayers() && t.getPlayers().contains(n.getChasing()))
-		// if (x == n.getChasing().getX() && y == n.getChasing().getY())
-		// return false;
-		// if (t.hasNpcs() || (t.hasPlayers() && n.getChasing() != null))
-		// return true;
-		// }
-		// t.cleanItself();
+		ActiveTile t = world.getTile(x, y);
+		if (mob instanceof Player) {
+			if (t.hasNpcs()) {
+				for (Npc n : t.getNpcs()) {
+					if (n.getDef().isAggressive()
+							&& !n.getLocation().inWilderness())
+						return true;
+				}
+			}
+		}
+		if (mob instanceof Npc) {
+			Npc n = (Npc) mob;
+			if (n.getChasing() != null)
+				if (t.hasPlayers() && t.getPlayers().contains(n.getChasing()))
+					if (x == n.getChasing().getX()
+							&& y == n.getChasing().getY())
+						return false;
+			if (t.hasNpcs() || (t.hasPlayers() && n.getChasing() != null))
+				return true;
+		}
 		return false;
 	}
 

@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.moparscape.msc.gs.Instance;
-import org.moparscape.msc.gs.builders.GameObjectPositionPacketBuilder;
-import org.moparscape.msc.gs.builders.ItemPositionPacketBuilder;
-import org.moparscape.msc.gs.builders.NpcPositionPacketBuilder;
-import org.moparscape.msc.gs.builders.NpcUpdatePacketBuilder;
-import org.moparscape.msc.gs.builders.PlayerPositionPacketBuilder;
-import org.moparscape.msc.gs.builders.PlayerUpdatePacketBuilder;
-import org.moparscape.msc.gs.builders.WallObjectPositionPacketBuilder;
+import org.moparscape.msc.gs.builders.client.GameObjectPositionPacketBuilder;
+import org.moparscape.msc.gs.builders.client.ItemPositionPacketBuilder;
+import org.moparscape.msc.gs.builders.client.NpcPositionPacketBuilder;
+import org.moparscape.msc.gs.builders.client.NpcUpdatePacketBuilder;
+import org.moparscape.msc.gs.builders.client.PlayerPositionPacketBuilder;
+import org.moparscape.msc.gs.builders.client.PlayerUpdatePacketBuilder;
+import org.moparscape.msc.gs.builders.client.WallObjectPositionPacketBuilder;
+import org.moparscape.msc.gs.config.Config;
 import org.moparscape.msc.gs.connection.RSCPacket;
 import org.moparscape.msc.gs.model.ChatMessage;
 import org.moparscape.msc.gs.model.Npc;
@@ -396,13 +397,17 @@ public final class ClientUpdater {
 		if (curTime - p.getLastPing() >= 30000) {
 			p.destroy(false);
 		} else if (p.warnedToMove()) {
-			if (curTime - p.getLastMoved() >= 960000 && p.loggedIn()) {
+			if (curTime - p.getLastMoved() >= ((Config.AFK_TIMEOUT + 1) * 60000)
+					&& p.loggedIn()) {
 				p.destroy(false);
 			}
-		} else if (curTime - p.getLastMoved() >= 900000) {
+		} else if (curTime - p.getLastMoved() >= (Config.AFK_TIMEOUT * 60000)
+				&& !p.warnedToMove()) {
 			p.getActionSender()
 					.sendMessage(
-							"@cya@You have not moved for 15 mins, please move to a new area to avoid logout.");
+							"@cya@You have not moved for "
+									+ Config.AFK_TIMEOUT
+									+ " mins, please move to a new area to avoid logout.");
 			p.warnToMove();
 		}
 	}
