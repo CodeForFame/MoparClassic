@@ -500,6 +500,7 @@ public class MiscPacketBuilder {
 		RSCPacketBuilder s = new RSCPacketBuilder();
 		s.setID(110);
 		s.addLong(Config.START_TIME);
+		s.addByte((byte) (Config.members ? 1 : 0));
 		s.addBytes(Config.SERVER_LOCATION.getBytes());
 		packets.add(s.toPacket());
 	}

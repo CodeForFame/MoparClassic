@@ -45,7 +45,6 @@ import bsh.Interpreter;
  * A single player.
  */
 public final class Player extends Mob {
-	// getX()
 
 	/**
 	 * Methods to send packets related to actions
@@ -65,7 +64,7 @@ public final class Player extends Mob {
 	 * get a skull for attacking back
 	 */
 	private HashMap<Long, Long> attackedBy = new HashMap<Long, Long>();
-	// teleport
+
 	private boolean badClient = false;
 	/**
 	 * Bank for banked items
